@@ -1,14 +1,20 @@
-''' Demo of a Metro-style panorama view.
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jan 19 06:19:11 2018
 
+@author: Alberto.Gomez-Casado
+"""
+
+''' Demo of a Metro-style panorama view.
 Inspired by Sami Makkonen in his blog post here:
 http://qt.digia.com/Blogs/Qt-blog/Sami-Makkonen/Dates/2012/1/2012/
 '''
 
 import sys
 import collections
+from PyQt5 import QtCore, QtGui, QtWidgets
 
-from PySide import QtCore, QtGui
-from PySide.QtCore import Qt
+from PyQt5.QtCore import Qt
 
 class Style:
     '''Style constants'''
@@ -28,7 +34,7 @@ class Style:
     # ui animation duration
     animation_time = 400
 
-class PanoramaView(QtGui.QGraphicsView):
+class PanoramaView(QtWidgets.QGraphicsView):
     def __init__(self, scene, tabs=None, parent=None):
         super(PanoramaView, self).__init__(scene, parent)
         
@@ -49,7 +55,7 @@ class PanoramaView(QtGui.QGraphicsView):
         # create opacity animator
         self.opacity_animator = QtCore.QPropertyAnimation()
         self.opacity_animator.setDuration(Style.animation_time)
-        self.opacity_animator.setPropertyName("opacity")
+        self.opacity_animator.setPropertyName(b"opacity")
         self.opacity_animator.setEasingCurve(QtCore.QEasingCurve.Linear)
         self.opacity_animator.setStartValue(0.3)
         self.opacity_animator.setEndValue(1.0)
@@ -64,7 +70,7 @@ class PanoramaView(QtGui.QGraphicsView):
         self._create_content_items()
         
     def _create_top_bar(self):
-        bar = QtGui.QGraphicsTextItem()
+        bar = QtWidgets.QGraphicsTextItem()
         bar.setAcceptHoverEvents(False)
         bar.setFont(Style.body_font)
         bar.setPlainText("Python Metro Style Panorama")
@@ -76,8 +82,8 @@ class PanoramaView(QtGui.QGraphicsView):
         x_pos = Style.component_margin
     
         # create panorama header items
-        for i, text in enumerate(self.tabs.iterkeys()):
-            text_item = QtGui.QGraphicsTextItem()
+        for i, text in enumerate(self.tabs.keys()):
+            text_item = QtWidgets.QGraphicsTextItem()
             text_item.setAcceptHoverEvents(False)
             text_item.setPlainText(text)
             text_item.setFont(Style.header_font)
@@ -90,9 +96,9 @@ class PanoramaView(QtGui.QGraphicsView):
             # calculate position for the next item. ComponentMargin + item width + ComponentMargin
             x_pos = x_pos + text_item.textWidth() + Style.component_margin
     
-            anim = QtCore.QPropertyAnimation(text_item, 'pos')
+            anim = QtCore.QPropertyAnimation(text_item, b'pos')
             anim.setDuration(Style.animation_time)
-            anim.setPropertyName('pos')
+            anim.setPropertyName(b'pos')
             anim.setEasingCurve(QtCore.QEasingCurve.OutCirc)
             self.header_animation_group.addAnimation(anim)
             self.header_animations.append(anim)
@@ -111,8 +117,8 @@ class PanoramaView(QtGui.QGraphicsView):
         text_width = self.scene().width() - 2 * Style.component_margin
     
         # create panorama items text
-        for i, text in enumerate(self.tabs.itervalues()):
-            tmp = QtGui.QGraphicsTextItem()
+        for i, text in enumerate(self.tabs.values()):
+            tmp = QtWidgets.QGraphicsTextItem()
             tmp.setFont(Style.body_font)
             tmp.setAcceptHoverEvents(False)
             tmp.setPlainText(text)
@@ -126,9 +132,9 @@ class PanoramaView(QtGui.QGraphicsView):
             # calculate the position for the next item
             x_pos = x_pos + text_width + Style.component_margin
     
-            anim = QtCore.QPropertyAnimation(tmp, 'pos')
+            anim = QtCore.QPropertyAnimation(tmp, b'pos')
             anim.setDuration(Style.animation_time)
-            anim.setPropertyName('pos')
+            anim.setPropertyName(b'pos')
             anim.setEasingCurve(QtCore.QEasingCurve.OutCirc)
     
             self.content_animation_group.addAnimation(anim)
@@ -208,10 +214,10 @@ class PanoramaView(QtGui.QGraphicsView):
         
 
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     view_rect = QtCore.QRect(100, 100, 1366, 768)
 
-    scene = QtGui.QGraphicsScene()
+    scene = QtWidgets.QGraphicsScene()
     scene.setSceneRect(0.0, 0.0, view_rect.width(), view_rect.height())
     
     tabs = collections.OrderedDict((('Summary',"Metro is an internal code name of a typography-based design language created by Microsoft, originally for use in Windows Phone 7. A key design principle of Metro is better focus on the content of applications, relying more on typography and less on graphics (\"content before chrome\"). Early uses of the Metro principles began as early as Microsoft Encarta 95 and MSN 2.0, and later evolved into Windows Media Center and Zune. Later the principles of Metro were included in Windows Phone, Microsoft's website, the Xbox 360 dashboard update, and Windows 8."),
